@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+<h1>Fragebogen zur den Emotionen Scham, Schuld, Angst und Ärger</h1>
+<p>Seite {{thispage}} von {{allpage}}</p>
+
+<form action="" method="post">{% csrf_token %}
+{{ formset.management_form }}
+<hr>
+{% for form in formset %}
+	<h2>{{ form.instance.question.sentence }}</h2>
+	<table>
+		<tr>
+			<td align="center" width=100></td>
+			<td align="center" width=100>überhaupt nicht</td>
+			<td align="center" width=100>ein wenig</td>
+			<td align="center" width=100>ziemlich</td>
+			<td align="center" width=100>stark</td>
+			<td align="center" width=100>sehr stark</td>
+		</tr>
+		{% for field in form.visible_fields|slice:"0:5" %}
+			<tr {% if field.errors%} bgcolor="red"{% endif %}>
+				<td>{{field.label}}</td>
+				{% for radio in field|slice:"1:" %}
+					 <td align="center"><label><span class="radio">{{ radio.tag }}</span></td>
+				{% endfor %}
+			</tr>
+		{% endfor %}
+		<tr{% if form.autobiographic.errors%} bgcolor="red"{% endif %}>
+		<td>{{form.autobiographic.label}}</td>{% for radio in form.autobiographic|slice:"1:" %}
+					 <td align="right"><label>{{radio.choice_label}}</td><td align="left"><span class="radio">{{ radio.tag }}</span></td>
+				{% endfor %}
+		
+	<table>
+	{% for hid in form.hidden_fields %} {{hid}}{% endfor %} 
+	<hr>
+{% endfor %}
+<input type="submit" value="Weiter" />
+</form>
+{% endblock %}

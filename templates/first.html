@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+<h1>Fragebogen zur den Emotionen Scham, Schuld, Angst und Ärger</h1>
+<form action="" method="post">{% csrf_token %}
+<table>
+{% for field in form %}
+	<tr {% if field.errors %} bgcolor="red" {%endif %}>
+		<td>{{ field.label_tag }}</td><td>{{field}}</td><td>{{ field.errors }}</td>
+	<tr>
+{% endfor %}
+</table>
+
+<p>Im Folgenden finden Sie eine Liste von verschiedenen Ereignissen, die einem in seinem Leben zustoßen können. </p>
+<p>Bitte lesen Sie jeden Satz genau durch und stellen Sie sich vor, wie Sie sich genau in dieser Situation fühlen würden. Überlegen Sie bitte nicht erst, welche Antwort sinnvoll erscheint, sondern antworten Sie so, wie es für Sie persönlich zutrifft.</p>
+<p>Jede beschriebene Situation können Sie auf der Basis von vier Emotionen beurteilen: Scham, Schuld, Angst und Ärger. Empfinden Sie z.B. mehr Ärger in einer bestimmten Situation, oder Angst? Bitte beurteilen Sie jede beschriebene Situation auf der Basis der vier vorgegebenen Emotionen.</p> 
+<p>Zu guter Letzt bitten wir Sie anzukreuzen, ob die Vorstellung der Situation auf einer schon erlebten Erinnerung beruht (=autobiographisch ist) oder nicht.</p>
+
+Zur leichteren Unterscheidung der Kategorien, hier eine Definition: 
+<ul>
+<li>Scham: ein Gefühl der Verlegenheit oder Bloßstellung, tritt immer dann auf, wenn wir befürchten soziales Ansehen zu verlieren; Bsp.: öffentliche Demütigung oder Überschreitung der Intimitätsgrenze </li>
+<li>Schuld: eng an den Gedanken geknüpft, etwas getan zu haben was der eigenen Moralvorstellung widerspricht und setzt voraus, dass wir unsere Handlungen beeinflussen können. Hierbei entsteht das Bedürfnis sich zu „entschuldigen“, somit die Situation wieder gut machen zu wollen.</li>
+<li>Angst: ist ein überlebenswichtige Warnsystem und hilft uns, Gefahren zu erkennen, ihnen zu entkommen und / oder vorzubeugen. Hierbei gibt es eine Menge an spezifischen oder unspezifischen Auslösern, wie z. B. ein gefährliches Tier oder Dunkelheit</li>
+<li>Ärger: ist notwendig, um die Bereitschaft zur Verteidigung zu aktivieren und um Ziele durchzusetzen. Entsteht immer dann, wenn wir selber, jemand nahestehendes oder wichtige Ziele von uns z. B. bedroht, blockiert, verhindert oder aufgeschoben werden</li>
+<li>Neutral: in neutralen Situationen sollte keine besondere Emotion vorherrschen, sondern ein normales alltägliches Ereignis beschrieben werden</li>
+</ul>
+<input type="submit" value="Weiter" />
+</form>
+{% endblock %}

@@ -5,7 +5,7 @@ PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.split(PROJECT_DIR)[0]
 
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -90,6 +90,7 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(PROJECT_DIR,'/templates/'),
     "templates",
+    "/srv/www/surveyor/templates",
     )
 
 INSTALLED_APPS = (

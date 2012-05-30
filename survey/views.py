@@ -38,7 +38,7 @@ def survey_page(request):
     #participant = get_object_or_404(Participant, pk = request.session.get('participant_id'))
     answered = Answer.objects.filter(participant = participant)
     unanswered = Question.objects.exclude(pk__in = answered.values_list('question', flat=True))
-    unfinished = Answer.objects.filter(done=False)
+    unfinished = Answer.objects.filter(participant = participant, done=False)
     
     if not unanswered and not unfinished:
         return HttpResponseRedirect(reverse('survey-thanks'))
@@ -63,7 +63,7 @@ def survey_page(request):
                     Answer(question=question, participant=participant).save()
                 except (IndexError):
                     pass
-        formset = AnswerFormSet(queryset=Answer.objects.filter(done=False).order_by('?') )
+        formset = AnswerFormSet(queryset=unfinished.order_by('?') )
     sentences = []
     for form in formset:
         form.fields['question'].widget = forms.HiddenInput()

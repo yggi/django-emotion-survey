@@ -81,7 +81,6 @@ class AnswerAdmin(admin.ModelAdmin):
 class ResultAdmin(admin.ModelAdmin):
     list_display = ('question', 'count', 'avg_fear', 'avg_anger', 'avg_shame', 'avg_guilt', 'avg_neutral','d_fear', 'd_anger', 'd_shame', 'd_guilt', 'd_neutral')
     list_display_links = ('count',)
-    list_filter = ('count', 'avg_fear' )
 admin.site.register(Participant, ParticipantAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)

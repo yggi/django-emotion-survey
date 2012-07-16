@@ -4,8 +4,9 @@
 
 {% block content %}
 <h1>Fragebogen zur den Emotionen Scham, Schuld, Angst und Ärger</h1>
-<p>Seite {{thispage}} von {{allpage}}</p>
-
+<p>Seite {{thispage}} von {{allpage}}
+<input type="button" onclick="window.location.href = 'check/';" value="abbrechen">
+</p>
 <form action="" method="post">{% csrf_token %}
 {{ formset.management_form }}
 <hr>
@@ -39,4 +40,6 @@
 {% endfor %}
 <input type="submit" value="Weiter" />
 </form>
+
+
 {% endblock %}

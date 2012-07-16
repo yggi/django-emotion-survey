@@ -12,7 +12,8 @@ def is_participant_done(obj):
 is_participant_done.short_description = 'Fertig?'
 
 class ParticipantAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'age', 'gender', 'degree',answers_by_participant, is_participant_done, 'date_start', 'date_last')
+    list_display = ('pk', 'age', 'gender', 'degree',answers_by_participant, 'done', 'date_start', 'session')
+    list_filter = ('done',)
     
 def answers_by_question(obj):
     return Answer.objects.filter(question = obj, done = True).count()

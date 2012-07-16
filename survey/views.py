@@ -7,20 +7,35 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django import forms
 from random import choice
 
-def survey_redirect(request):
-    if request.session.get('participant_id', False) and Participant.objects.filter(pk = request.session.get('participant_id')):
-        return HttpResponseRedirect(reverse('survey-page'))
-    else:
-        return HttpResponseRedirect(reverse('survey-first'))
+#def survey_redirect(request):
+#    if request.session.get('participant_id', False) and Participant.objects.filter(pk = request.session.get('participant_id')):
+#        return HttpResponseRedirect(reverse('survey-page'))
+#    else:
+#        return HttpResponseRedirect(reverse('survey-first'))
 
+def survey_reset(request):
+    if not request.session.session_key:
+        return HttpResponseRedirect(reverse('survey-page'))
+    try:
+        participant = Participant.objects.get(session = request.session.session_key)
+    except Participant.DoesNotExist:
+        return HttpResponseRedirect(reverse('survey-page'))
+    
+    participant.session = "aborted"
+    participant.save()
+    return HttpResponseRedirect(reverse('survey-page'))
+    
 def survey_first(request):
     if request.method == 'POST':
         form = ParticipantForm(request.POST)
         if form.is_valid():
-            participant = form.save(commit=False)
-            participant.session_key = "foo" #request.session.session_key.lower()
-            participant.save()
-            request.session['participant_id'] = participant.pk
+            try:
+                participant = Participant.objects.get(session = request.session.session_key)
+            except Participant.DoesNotExist:
+                participant = form.save(commit=False)
+                participant.session = request.session.session_key
+                participant.save()
+                #request.session['participant_id'] = participant.pk
             return HttpResponseRedirect(reverse('survey-page'))
     else:
         form = ParticipantForm()
@@ -31,8 +46,11 @@ def survey_first(request):
                                              context_instance=RequestContext(request))
 
 def survey_page(request):
+    request.session['foo'] = "bar"
+    if not request.session.session_key:
+        return HttpResponseRedirect(reverse('survey-first'))
     try:
-        participant = Participant.objects.get(pk = request.session.get('participant_id',False))
+        participant = Participant.objects.get(session = request.session.session_key)
     except Participant.DoesNotExist:
         return HttpResponseRedirect(reverse('survey-first'))
     #participant = get_object_or_404(Participant, pk = request.session.get('participant_id'))
@@ -41,6 +59,8 @@ def survey_page(request):
     unfinished = Answer.objects.filter(participant = participant, done=False)
     
     if not unanswered and not unfinished:
+        participant.done = True
+        participant.save()
         return HttpResponseRedirect(reverse('survey-thanks'))
     
     if request.method == 'POST':

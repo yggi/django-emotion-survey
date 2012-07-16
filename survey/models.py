@@ -27,20 +27,30 @@ class Participant(models.Model):
                       (1,"qualifizierender Hauptschulabschluss"),
                       (2,"Realschulabschluss"),
                       (3,"Abitur/Fachabitur"),
-                      (4,"Hochschulabschluss"),
+#                      (4,"Hochschulabschluss"),
                       )
     degree = models.SmallIntegerField(_('Schulabschluss'),choices=DEGREE_CHOICES)
-    degree_free = models.CharField(_('Schulabschluss sonstiges'), max_length=50, blank=True)
+    
+    JOB_CHOICES = (("LehreOhne","Lehre ohne Abschluss"),("LehreMit","Lehre mit Abschluss"), ("FachOhne","Fachoberschule ohne Abschluss"), ("FachMit","Fachoberschule mit Abschluss"), ("StudOhne","Studium ohne Abschluss"),("StudMit", "Studium mit Abschluss (Diplom, Magister, Bachelor)"))
+    degree_free = models.CharField(_('Berufsausbildung'), max_length=50, blank=True, choices=JOB_CHOICES)
     
     date_start = models.DateTimeField(auto_now_add=True)
     date_last = models.DateTimeField(auto_now=True)
     
+    session = models.CharField(max_length=100, blank=True) 
+
     def __unicode__(self):
         return "%s [%s,%s]"%(self.pk, self.age, self.gender)
-
+    done = models.BooleanField(_("Fertig?"), default=False)
+       
+#    def _isDone(self):
+#        "Returns the person's full name."
+#        return Answer.objects.filter(participant = self, done = True).count() == Question.objects.all().count()
+#    done = property(_isDone)
 class ParticipantForm(ModelForm):
     class Meta:
         model = Participant
+	exclude = ('session','done')
         
 class Answer(models.Model):
     CHOICES = [0,1,2,3,4]

@@ -1,17 +1,45 @@
+# -*- coding: utf-8 -*-
+
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
-# Create your views here.
 from models import ParticipantForm, AnswerFormSet, Participant, Question, Answer, CATEGORIES, Result
 from django.shortcuts import render_to_response, get_object_or_404
 from django import forms
 from random import choice
+from django.db.models import Avg
 
 #def survey_redirect(request):
 #    if request.session.get('participant_id', False) and Participant.objects.filter(pk = request.session.get('participant_id')):
 #        return HttpResponseRedirect(reverse('survey-page'))
 #    else:
 #        return HttpResponseRedirect(reverse('survey-first'))
+
+def survey_eval(request):
+    ev = []
+    
+    genders = [{'title':"Alle", 'query':["m","f"]},{'title':u"Männlich", 'query':["m"],},{'title':"Weiblich", 'query':["f"]}]
+    
+    for g in genders:
+        ps = Participant.objects.filter(done=True, gender__in=g['query'])
+        psa = ps.aggregate(age = Avg('age'), edu = Avg('education'), degree = Avg('degree'))
+        psa['count'] = ps.count()
+        
+        qs = Question.objects.filter(answer__participant__done=True, answer__participant__gender__in=g['query']).annotate(fear__avg=Avg('answer__fear'), anger__avg=Avg('answer__anger'), shame__avg=Avg('answer__shame'), guilt__avg=Avg('answer__guilt'), neutral__avg=Avg('answer__neutral'))
+        
+        qsv = qs.values()
+        for q in qsv:
+            q['fear']=q['fear__avg']-(q['anger__avg']+q['shame__avg']+q['guilt__avg']+q['neutral__avg'])
+            q['anger']=q['anger__avg']-(q['fear__avg']+q['shame__avg']+q['guilt__avg']+q['neutral__avg'])
+            q['shame']=q['shame__avg']-(q['fear__avg']+q['anger__avg']+q['guilt__avg']+q['neutral__avg'])
+            q['guilt']=q['guilt__avg']-(q['anger__avg']+q['shame__avg']+q['fear__avg']+q['neutral__avg'])
+            q['neutral']=q['neutral__avg']-(q['anger__avg']+q['shame__avg']+q['guilt__avg']+q['fear__avg'])
+        
+        
+        ev.append({'title':g['title'], 'ps':psa, 'qs':qsv})
+        
+    return render_to_response("eval.html",{'ev':ev, 'cat':CATEGORIES} ,context_instance=RequestContext(request))
+    
 
 def survey_reset(request):
     if not request.session.session_key:

@@ -43,10 +43,10 @@ class Participant(models.Model):
         return "%s [%s,%s]"%(self.pk, self.age, self.gender)
     done = models.BooleanField(_("Fertig?"), default=False)
        
-#    def _isDone(self):
-#        "Returns the person's full name."
-#        return Answer.objects.filter(participant = self, done = True).count() == Question.objects.all().count()
-#    done = property(_isDone)
+    #def _isDone(self):
+    #    return Answer.objects.filter(participant = self, done = True).count() == Question.objects.all().count()
+    #isDone = property(_isDone)
+
 class ParticipantForm(ModelForm):
     class Meta:
         model = Participant
@@ -69,6 +69,12 @@ class Answer(models.Model):
         unique_together = (('question', 'participant'),)
     def __unicode__(self):
         return u"%s[%s,%s]"%(self.done,self.participant,self.question)
+    
+    def _dfear(self):
+      return self.fear-(self.anger+self.shame+self.guilt+self.neutral)
+      
+    dfear = property(_dfear)
+    
     
 class AnswerForm(ModelForm):
     class Meta:

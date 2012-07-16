@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Auswertung{% endblock %}
+
+{% block content %}
+
+
+
+
+<h1>Auswertung</h1>
+
+{% for e in ev %}
+  <h2>{{e.title}}</h2>
+  <table>
+    <tr><th>Anzahl</th><td>{{e.ps.count}}</td></tr>
+    <tr><th>avg(Alter)</th><td>{{e.ps.age|floatformat:2}}</td></tr>
+    <tr><th>avg(Schuljahre)</th><td>{{e.ps.edu|floatformat:2}}</td></tr>
+  </table>
+  
+  <h3>Angst</h3>
+  <table>
+    <tr>
+      <th width=50>ID</th>
+      <th width=100>Kategorie</th>
+      <th width=450>Satz</th>
+      <th width=50>Avg</th>
+      <th width=50>delta</th>
+    </tr>
+    {% for q in e.qs|dictsortreversed:"fear"|slice:":20" %}
+    <tr>
+      <td>{{q.id}}</td>
+      <td>[{{q.category}}]</td>
+      <td>{{q.sentence}}</td>
+      <td>{{q.fear__avg|floatformat:2}}</td>
+      <td>{{q.fear|floatformat:2}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  
+  <h3>Ärger</h3>
+  <table>
+    <tr>
+      <th width=50>ID</th>
+      <th width=100>Kategorie</th>
+      <th width=450>Satz</th>
+      <th width=50>Avg</th>
+      <th width=50>delta</th>
+    </tr>
+    {% for q in e.qs|dictsortreversed:"anger"|slice:":20" %}
+    <tr>
+      <td>{{q.id}}</td>
+      <td>[{{q.category}}]</td>
+      <td>{{q.sentence}}</td>
+      <td>{{q.anger__avg|floatformat:2}}</td>
+      <td>{{q.anger|floatformat:2}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  
+  <h3>Scham</h3>
+  <table>
+    <tr>
+      <th width=50>ID</th>
+      <th width=100>Kategorie</th>
+      <th width=450>Satz</th>
+      <th width=50>Avg</th>
+      <th width=50>delta</th>
+    </tr>
+    {% for q in e.qs|dictsortreversed:"shame"|slice:":20" %}
+    <tr>
+      <td>{{q.id}}</td>
+      <td>[{{q.category}}]</td>
+      <td>{{q.sentence}}</td>
+      <td>{{q.shame__avg|floatformat:2}}</td>
+      <td>{{q.shame|floatformat:2}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  
+  <h3>Schuld</h3>
+  <table>
+    <tr>
+      <th width=50>ID</th>
+      <th width=100>Kategorie</th>
+      <th width=450>Satz</th>
+      <th width=50>Avg</th>
+      <th width=50>delta</th>
+    </tr>
+    {% for q in e.qs|dictsortreversed:"guilt"|slice:":20" %}
+    <tr>
+      <td>{{q.id}}</td>
+      <td>[{{q.category}}]</td>
+      <td>{{q.sentence}}</td>
+      <td>{{q.guilt__avg|floatformat:2}}</td>
+      <td>{{q.guilt|floatformat:2}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  
+  <h3>Neutral</h3>
+  <table>
+    <tr>
+      <th width=50>ID</th>
+      <th width=100>Kategorie</th>
+      <th width=450>Satz</th>
+      <th width=50>Avg</th>
+      <th width=50>delta</th>
+    </tr>
+    {% for q in e.qs|dictsortreversed:"neutral"|slice:":20" %}
+    <tr>
+      <td>{{q.id}}</td>
+      <td>[{{q.category}}]</td>
+      <td>{{q.sentence}}</td>
+      <td>{{q.neutral__avg|floatformat:2}}</td>
+      <td>{{q.neutral|floatformat:2}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endfor %}
+
+
+{% endblock %}
